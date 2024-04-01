@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 09:16:11 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/04/01 09:16:12 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/04/01 10:50:09 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,27 @@
 // 	}
 // }
 
+int check_args(int ac, char **av)
+{
+	int i;
+	int j;
+
+	i = 1;
+	while (i < ac)
+	{
+		j = 0;
+		while (av[i][j])
+		{
+			if (ft_isdigit(av[i][j]))
+				j++;
+			else
+				return 1;
+		}
+		i++;
+	}
+	return 0;
+}
+
 int	ft_atoi(char *str)
 {
 	unsigned long long	nb;
@@ -69,6 +90,7 @@ int	ft_atoi(char *str)
 int	parse_input(t_table *table, char **av)
 {
 	table->dead_flag = 0;
+	table->aux_counter = 0;
 	table->n_philos = ft_atoi(av[1]);
     if (table->n_philos > 200)
         return(1);

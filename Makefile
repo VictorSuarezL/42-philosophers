@@ -6,7 +6,7 @@
 #    By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/01 09:16:19 by vsanz-su          #+#    #+#              #
-#    Updated: 2024/04/01 09:16:20 by vsanz-su         ###   ########.fr        #
+#    Updated: 2024/04/01 10:46:04 by vsanz-su         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,7 @@ SRC_FILES = $(SRC_DIR)/main.c \
 			$(SRC_DIR)/error.c \
 			$(SRC_DIR)/init.c \
 			$(SRC_DIR)/parse_input.c \
+			$(SRC_DIR)/utils.c
 
 
 

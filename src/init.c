@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 09:15:57 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/04/01 09:15:58 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/04/01 11:13:56 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int init_philo(t_table *table)
         table->philos[i].meal_lock = &table->meal_lock;
         table->philos[i].write_lock = &table->write_lock;
 		// pthread_mutex_init(&table->philos[i].philo_lock, PTHREAD_MUTEX_NORMAL);
-		// table->philos[i].table = table;
+		table->philos[i].table = table;
 	}
 	return 0;
 }

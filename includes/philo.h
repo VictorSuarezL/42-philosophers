@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 09:15:39 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/04/01 09:15:41 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/04/01 13:41:20 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,17 @@
 typedef pthread_mutex_t	t_mtx;
 typedef struct s_table	t_table;
 
-// UTILS:
+// ERROR:
+void	ft_putendl_fd(char *s, int fd);
 void	ft_error(char *msg);
 
+// UTILS:
+int	ft_isdigit(int i);
+void ft_usleep(int t);
+
+
 // PARSE_INPUT:
+int check_args(int ac, char **av);
 int	parse_input(t_table *table, char **av);
 
 // INIT:
@@ -87,6 +94,8 @@ typedef struct s_philo
 
 typedef struct s_table
 {
+	// AUX VARIABLES:
+	int 			aux_counter;
 	// ARG VARIABLES:
 	int				n_philos;
 	int				time_to_die;

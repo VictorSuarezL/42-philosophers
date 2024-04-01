@@ -1,49 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   utils_libft.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/01 09:15:48 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/04/01 13:41:27 by vsanz-su         ###   ########.fr       */
+/*   Created: 2024/04/01 10:01:27 by vsanz-su          #+#    #+#             */
+/*   Updated: 2024/04/01 10:24:23 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philo.h>
 
-static void	ft_putstr_fd(char *s, int fd)
+int	ft_isdigit(int i)
 {
-	int	i;
-
-	i = 0;
-	if (!s || !fd)
+	if (i >= '0' && i <= '9')
 	{
-		return ;
+		return (1);
 	}
-	while (s[i])
-	{
-		write(fd, &s[i], 1);
-		i++;
-	}
+	return (0);
 }
 
-static void	ft_putchar_fd(char c, int fd)
+void ft_usleep(int t)
 {
-	write(fd, &c, 1);
-}
-
-void	ft_putendl_fd(char *s, int fd)
-{
-	if (s)
-	{
-		ft_putstr_fd(s, fd);
-		ft_putchar_fd('\n', fd);
-	}
-}
-
-void	ft_error(char *msg)
-{
-	ft_putendl_fd(msg, STDERR_FILENO);
-	exit(EXIT_FAILURE);
+	usleep(t * 1000);
 }
