@@ -1,7 +1,19 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/04/01 09:16:19 by vsanz-su          #+#    #+#              #
+#    Updated: 2024/04/01 09:16:20 by vsanz-su         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME = philo
 CFLAGS = -Wextra -Wall -Werror -g -MMD
-CC = gcc $(CFLAGS) $(INCLUDE) 
-INCLUDE	= -I ./includes 
+CC = gcc $(CFLAGS) $(INCLUDE)
+INCLUDE	= -I ./includes
 SRC_DIR = src
 OBJ_DIR = obj
 

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/01 09:16:05 by vsanz-su          #+#    #+#             */
+/*   Updated: 2024/04/01 09:16:06 by vsanz-su         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <philo.h>
 
 void eat(t_philo *philo)
@@ -65,7 +77,7 @@ int thread_create(t_table *table)
 	i = -1;
 	while (++i < table->n_philos)
 	{
-		if (pthread_create(&table->philos[i].thread_id, NULL, 
+		if (pthread_create(&table->philos[i].thread_id, NULL,
 		&philo_routine, &table->philos[i]) != 0)
 		{
 			ft_error("maybe leaks here!");
@@ -119,7 +131,7 @@ int	main(int ac, char **av)
 			table->time_to_die = %i\n \
 			table->time_to_eat = %i\n \
 			table->time_to_sleep = %i\n \
-			table->n_limit_meals = %i\n", 
+			table->n_limit_meals = %i\n",
 			table.n_philos,
 			table.time_to_die,
 			table.time_to_eat,

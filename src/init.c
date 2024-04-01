@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/01 09:15:57 by vsanz-su          #+#    #+#             */
+/*   Updated: 2024/04/01 09:15:58 by vsanz-su         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <philo.h>
 
 /**
  * Initializes the table with philosophers and forks.
- * 
+ *
  * @param table The table structure to initialize.
  * @return 0 if initialization is successful, 1 otherwise.
  */
@@ -36,7 +48,7 @@ int init_table(t_table *table)
 
 /**
  * Initializes the philosophers in the table.
- * 
+ *
  * @param table The table structure containing the philosophers.
  * @return 0 if successful, -1 otherwise.
  */
@@ -65,7 +77,7 @@ int init_philo(t_table *table)
 
 /**
  * Assigns forks to each philosopher in the table.
- * 
+ *
  * @param table The table struct containing the philosophers and forks.
  */
 void assign_fork(t_table *table)
