@@ -16,15 +16,18 @@ void eat(t_philo *philo)
 	pthread_mutex_unlock(&philo->left_fork->fork);
 	pthread_mutex_unlock(&philo->right_fork->fork);
 }
+
 void nap(t_philo *philo)
 {
 	printf("%i is sleeping\n", philo->id);
 	usleep(philo->table->time_to_sleep);
 }
+
 void think(t_philo *philo)
 {
 	printf("%i is thinking\n", philo->id);
 }
+
 int dead_loop(t_philo *philo)
 {
 	pthread_mutex_lock(philo->dead_lock);

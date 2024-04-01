@@ -22,13 +22,13 @@ int init_table(t_table *table)
 		return 1;
 	}
     // INIT LOCKS TABLE:
-	pthread_mutex_init(&table->write_lock, PTHREAD_MUTEX_NORMAL);
-	pthread_mutex_init(&table->dead_lock, PTHREAD_MUTEX_NORMAL);
-	pthread_mutex_init(&table->meal_lock, PTHREAD_MUTEX_NORMAL);
+	pthread_mutex_init(&table->write_lock, NULL);
+	pthread_mutex_init(&table->dead_lock, NULL);
+	pthread_mutex_init(&table->meal_lock, NULL);
 	// INIT LOCKS FORKS:
 	while (++i < table->n_philos)
 	{
-		pthread_mutex_init(&table->forks[i].fork, PTHREAD_MUTEX_NORMAL);
+		pthread_mutex_init(&table->forks[i].fork, NULL);
 		table->forks[i].fork_id = i;
 	}
 	return 0;
