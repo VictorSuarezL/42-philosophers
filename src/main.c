@@ -104,20 +104,27 @@ int	thread_create(t_table *table)
 	int	i;
 	pthread_t observer;
 
-
+	i = -1;
+	table->start_simulation = get_current_time();
+	if (table->n_limit_meals == 0)
+		return 1;
+	else
+	{
+		while (++i < table->n_philos)
+		{
+			if (pthread_create(&table->philos[i].thread_id, NULL, &philo_routine,
+					&table->philos[i]) != 0)
+			{
+				ft_error("maybe leaks here!");
+			}
+		}
+	}
 	if(pthread_create(&observer, NULL, &monitor, &table) != 0)
 	{
 		ft_error("maybe leaks here! destoy");
 	}
-	i = -1;
-	while (++i < table->n_philos)
-	{
-		if (pthread_create(&table->philos[i].thread_id, NULL, &philo_routine,
-				&table->philos[i]) != 0)
-		{
-			ft_error("maybe leaks here!");
-		}
-	}
+	// set_bool(&table->table_lock, &table-);
+
 	i = -1;
 	while (++i < table->n_philos)
 	{
@@ -127,6 +134,7 @@ int	thread_create(t_table *table)
 		}
 		i++;
 	}
+	set_bool(&table->table_lock, &table->end_simulation, true);
 	return (0);
 }
 

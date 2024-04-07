@@ -40,6 +40,11 @@ void safe_lock_handle(t_mtx *mutex, t_code code);
 // MONITOR:
 void *monitor(void *pointer);
 
+// SET AND GET:
+void set_bool(t_mtx *mtx, bool *dest, bool value);
+bool get_bool(t_mtx *mtx, bool *value);
+
+
 
 // UTILS:
 int	ft_isdigit(int i);
@@ -109,7 +114,7 @@ typedef struct s_table
 	t_mtx				table_lock;
 	t_mtx				write_lock;
 	long				start_simulation;
-	long				end_simulation;
+	bool				end_simulation;
 }						t_table;
 
 #endif

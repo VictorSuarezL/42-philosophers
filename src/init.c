@@ -33,6 +33,7 @@ int init_table(t_table *table)
 	{
 		return 1;
 	}
+	
     // INIT LOCKS TABLE:
 	pthread_mutex_init(&table->table_lock, NULL);
 	pthread_mutex_init(&table->write_lock, NULL);

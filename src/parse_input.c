@@ -90,7 +90,8 @@ int	ft_atoi(char *str)
 int	parse_input(t_table *table, char **av)
 {
 	// table->dead_flag = 0;
-	table->start_simulation = get_current_time();
+	// table->start_simulation = get_current_time();
+	table->end_simulation = false;
 	table->aux_counter = 0;
 	table->n_philos = ft_atoi(av[1]);
     if (table->n_philos > 200)

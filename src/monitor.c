@@ -38,6 +38,13 @@ bool get_bool(t_mtx *mtx, bool *value)
     return (res);
 }
 
+void set_bool(t_mtx *mtx, bool *dest, bool value)
+{
+    safe_lock_handle(mtx, LOCK);
+    *dest = value;
+    safe_lock_handle(mtx, UNLOCK);
+}
+
 
 bool simulation_finished(t_table *table)
 {
@@ -50,15 +57,31 @@ void *monitor(void *pointer)
     t_table *table;
     int i;
 
-    i = -1;
+    // i = -1;
 
     table = (t_table *)pointer;
     while (!simulation_finished(table))
     {
-        if (check_all_ate(table) == 1)
+        i = -1;
+        // while (++i<table->n_philos && !simulation_finished(table))
+        // {
+        //     // print_action(&table->philos[i], "simul not finished");
+        //     // ft_usleep(2000);
+        //     // if (check_all_ate(table) == 1)
+        //     // {
+        //     //     set_bool(&table->table_lock, &table->end_simulation, true);
+        //     //     print_action(&table->philos[i], "ALL ATE!");
+        //     // }
+        // }
+        while (++i<table->n_philos)
         {
-            break;
+            // printf("hello!\n");
+            print_action(&table->philos[i], "simul not finished");
+            ft_usleep(2000);
         }
+        
+        printf("simulation not finished!\n");
+        ft_usleep(2000);
     }
-    return (table);
+    return (NULL);
 }
