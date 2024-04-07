@@ -14,30 +14,52 @@
 
 void	eat(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->left_fork->fork);
-	printf("%i has taken left fork id = %i\n", philo->id-1, philo->left_fork->fork_id);
-	pthread_mutex_lock(&philo->right_fork->fork);
-	printf("%i has taken right fork id = %i\n", philo->id-1, philo->right_fork->fork_id);
+	if (philo->id%2 == 0)
+	{
+		safe_lock_handle(&philo->left_fork->fork, LOCK);
+		print_action(philo, "has taken a fork left");
 
-	pthread_mutex_lock(philo->meal_lock);
-	philo->table->aux_counter++;
-	printf("%i is eating\n", philo->id-1);
-	printf("-->aux_counter = %i\n", philo->table->aux_counter);
+		// printf("%i has taken left fork id = %i\n", philo->id-1, philo->left_fork->fork_id);
+		safe_lock_handle(&philo->right_fork->fork, LOCK);
+		print_action(philo, "has taken a fork right");
+		// printf("%i has taken right fork id = %i\n", philo->id-1, philo->right_fork->fork_id);
+	}
+	else
+	{
+		safe_lock_handle(&philo->right_fork->fork, LOCK);
+		print_action(philo, "has taken a fork right");
+		// printf("%i has taken right fork id = %i\n", philo->id-1, philo->right_fork->fork_id);
+		safe_lock_handle(&philo->left_fork->fork, LOCK);
+		print_action(philo, "has taken a fork left");
+		// printf("%i has taken left fork id = %i\n", philo->id-1, philo->left_fork->fork_id);
+	}
+	
+	
+	safe_lock_handle(&philo->philo_lock, LOCK);
+	// philo->table->aux_counter++;
+	// printf("%i is eating\n", philo->id-1);
+	print_action(philo, "is eating");
+	// printf("-->aux_counter = %i\n", philo->table->aux_counter);
 	// philo->eating = 1;
 	ft_usleep(philo->table->time_to_eat);
 	// usleep(philo->table->time_to_eat);
-	// philo->meals_counter++;
-	pthread_mutex_unlock(philo->meal_lock);
+	philo->meals_counter++;
+	safe_lock_handle(&philo->philo_lock, UNLOCK);
 	// philo->eating = 0;
-	pthread_mutex_unlock(&philo->left_fork->fork);
-	pthread_mutex_unlock(&philo->right_fork->fork);
+	safe_lock_handle(&philo->left_fork->fork, UNLOCK);
+	safe_lock_handle(&philo->right_fork->fork, UNLOCK);
 }
 
-// void	nap(t_philo *philo)
-// {
-// 	printf("%i is sleeping\n", philo->id);
-// 	ft_usleep(philo->table->time_to_sleep);
-// }
+void	nap(t_philo *philo)
+{
+	print_action(philo, "is sleeping");
+	ft_usleep(philo->table->time_to_sleep);
+}
+
+void think(t_philo *philo)
+{
+	print_action(philo, "is_thinking");
+}
 
 // void	think(t_philo *philo)
 // {
@@ -58,17 +80,21 @@ void	*philo_routine(void *pointer)
 	t_philo	*philo;
 
 	philo = (t_philo *)pointer;
-	if (philo->id % 2 == 0)
-	{
-		// ft_putendl_fd("sleeping!", 1);
-		// printf("sleeping!\n");
-		usleep(100);
-	}
+	// if (philo->id % 2 == 0)
+	// {
+	// 	// ft_putendl_fd("sleeping!", 1);
+	// 	// printf("sleeping!\n");
+	// 	usleep(100);
+	// }
 	// while (!dead_loop(philo))
 	while (1)
 	{
+		// print_action(philo, "is eating");
+
 		eat(philo);
-		// nap(philo);
+		nap(philo);
+		think(philo);
+		// ft_usleep(2000);
 	}
 	return (pointer);
 }
@@ -76,9 +102,13 @@ void	*philo_routine(void *pointer)
 int	thread_create(t_table *table)
 {
 	int	i;
+	pthread_t observer;
 
-	// pthread_t observer;
-	// TODO: Create the monitor process
+
+	if(pthread_create(&observer, NULL, &monitor, &table) != 0)
+	{
+		ft_error("maybe leaks here! destoy");
+	}
 	i = -1;
 	while (++i < table->n_philos)
 	{
@@ -107,17 +137,13 @@ This is the main function:
 int	main(int ac, char **av)
 {
 	t_table	table;
-	int		i;
+	// int		i;
 
 	// (void)ac;
 	if (ac < 5 || ac > 6)
-	{
 		ft_error("Error: Invalid number of arguments");
-	}
 	if (check_args(ac, av))
-	{
 		ft_error("Invalid args");
-	}
 	if (parse_input(&table, av))
 	{
 		ft_error("Error in parse inputs!");
@@ -144,7 +170,8 @@ int	main(int ac, char **av)
 	// 		table.time_to_eat,
 	// 		table.time_to_sleep,
 	// 		table.n_limit_meals);
-	i = -1;
+	// int i;
+	// i = -1;
 	// while (++i < table.n_philos)
 	// {
 	// 	printf("table->philos[%i].id = %i\n", i, table.philos[i].id);

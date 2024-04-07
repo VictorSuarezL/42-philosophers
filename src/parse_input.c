@@ -65,7 +65,7 @@ int check_args(int ac, char **av)
 
 int	ft_atoi(char *str)
 {
-	unsigned long long	nb;
+	int 	nb;
 	int					sign;
 	int					i;
 
@@ -89,7 +89,8 @@ int	ft_atoi(char *str)
 
 int	parse_input(t_table *table, char **av)
 {
-	table->dead_flag = 0;
+	// table->dead_flag = 0;
+	table->start_simulation = get_current_time();
 	table->aux_counter = 0;
 	table->n_philos = ft_atoi(av[1]);
     if (table->n_philos > 200)

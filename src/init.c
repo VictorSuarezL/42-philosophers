@@ -28,15 +28,16 @@ int init_table(t_table *table)
 	{
 		return 1;
 	}
-	table->forks = (t_fork *)malloc(table->n_philos * sizeof(t_philo));
+	table->forks = (t_fork *)malloc(table->n_philos * sizeof(t_fork));
 	if (!table->forks)
 	{
 		return 1;
 	}
     // INIT LOCKS TABLE:
+	pthread_mutex_init(&table->table_lock, NULL);
 	pthread_mutex_init(&table->write_lock, NULL);
-	pthread_mutex_init(&table->dead_lock, NULL);
-	pthread_mutex_init(&table->meal_lock, NULL);
+	// pthread_mutex_init(&table->dead_lock, NULL);
+	// pthread_mutex_init(&table->meal_lock, NULL);
 	// INIT LOCKS FORKS:
 	while (++i < table->n_philos)
 	{
@@ -56,7 +57,7 @@ int init_philo(t_table *table)
 {
 	int i;
 	// TODO: MAYBE THIS SHOULD BE A VOID FUNCTION IF
-	// IT CAN NOT CRASH
+	// IT CANNOT CRASH
 
 	i = -1;
 	while (++i < table->n_philos)
@@ -64,11 +65,11 @@ int init_philo(t_table *table)
 		table->philos[i].id = i + 1;
 		table->philos[i].full = false;
 		table->philos[i].meals_counter = 0;
-        table->philos[i].dead = &table->dead_flag;
-        table->philos[i].dead_lock = &table->dead_lock;
-        table->philos[i].meal_lock = &table->meal_lock;
-        table->philos[i].write_lock = &table->write_lock;
-		// pthread_mutex_init(&table->philos[i].philo_lock, PTHREAD_MUTEX_NORMAL);
+        // table->philos[i].dead = &table->dead_flag;
+        // table->philos[i].dead_lock = &table->dead_lock;
+        // table->philos[i].meal_lock = &table->meal_lock;
+        // table->philos[i].write_lock = &table->write_lock;
+		pthread_mutex_init(&table->philos[i].philo_lock, PTHREAD_MUTEX_NORMAL);
 		table->philos[i].table = table;
 	}
 	return 0;

@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 NAME = philo
-CFLAGS = -Wextra -Wall -Werror -g -MMD
+# CFLAGS = -Wextra -Wall -Werror -g -MMD
 CC = gcc $(CFLAGS) $(INCLUDE)
 INCLUDE	= -I ./includes
 SRC_DIR = src
@@ -22,6 +22,8 @@ SRC_FILES = $(SRC_DIR)/main.c \
 			$(SRC_DIR)/error.c \
 			$(SRC_DIR)/init.c \
 			$(SRC_DIR)/parse_input.c \
+			$(SRC_DIR)/safe_functions.c \
+			$(SRC_DIR)/monitor.c \
 			$(SRC_DIR)/utils.c
 
 

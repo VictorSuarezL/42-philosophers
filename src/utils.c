@@ -21,7 +21,34 @@ int	ft_isdigit(int i)
 	return (0);
 }
 
-void ft_usleep(int t)
+size_t	get_current_time(void)
 {
-	usleep(t * 1000);
+	struct timeval	time;
+
+	if (gettimeofday(&time, NULL) == -1)
+		write(2, "gettimeofday() error\n", 22);
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
+}
+
+int	ft_usleep(size_t milliseconds)
+{
+	size_t	start;
+
+	start = get_current_time();
+	while ((get_current_time() - start) < milliseconds)
+		usleep(500);
+	return (0);
+}
+
+void print_action(t_philo *philo, char *str)
+{
+	size_t time;
+	// printf("start_simulation = %ld\n", philo->table->start_simulation);
+	// printf("current = %ld\n", get_current_time());
+	// safe_lock_handle(&philo->table->write_lock, LOCK);
+	time = get_current_time() - philo->table->start_simulation;
+	// printf("time = %ld\n", time);
+	// printf("[%ld]\n", time);
+	printf("[%ld] %i %s\n", time, philo->id, str);
+	// safe_lock_handle(&philo->table->write_lock, UNLOCK);
 }
