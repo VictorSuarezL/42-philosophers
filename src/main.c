@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 09:16:05 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/04/08 13:40:37 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/04/08 17:13:33 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,20 @@ void think(t_philo *philo)
 // 	return (0);
 // }
 
+void wait_all_thd_ready(t_table *table)
+{
+	while(!table->all_threads_ready)
+	{
+		;
+	}
+}
+
 void	*philo_routine(void *pointer)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)pointer;
+	wait_all_thd_ready(philo->table);
 
 	// if (philo->id % 2 == 0)
 	// {
@@ -120,6 +129,8 @@ int	thread_create(t_table *table)
 			{
 				ft_error("maybe leaks here!");
 			}
+			// monitor(table);
+			// printf("i = %i\n", i);
 			// safe_lock_handle(&table->table_lock, UNLOCK);
 			// table->n_thd_running++;
 			// printf("here!\n");
@@ -136,7 +147,7 @@ int	thread_create(t_table *table)
 	}
 	// safe_lock_handle(&table->table_lock, UNLOCK);
 
-	// set_bool(&table->table_lock, &table-);
+	set_bool(&table->table_lock, &table->all_threads_ready, true);
 
 	i = -1;
 	while (++i < table->n_philos)
@@ -181,26 +192,26 @@ int	main(int ac, char **av)
 		return (1);
 	}
 	assign_fork(&table);
-	printf("\t\t\ttable->n_philos = %i\n \
-			table->time_to_die = %i\n \
-			table->time_to_eat = %i\n \
-			table->time_to_sleep = %i\n \
-			table->n_limit_meals = %i\n",
-			table.n_philos,
-			table.time_to_die,
-			table.time_to_eat,
-			table.time_to_sleep,
-			table.n_limit_meals);
-	int i;
-	i = -1;
-	while (++i < table.n_philos)
-	{
-		printf("table->philos[%i].id = %i\n", i, table.philos[i].id);
-		printf("\ttable->philos[%i].left_fork = %i\n", i,
-			table.philos[i].left_fork->fork_id);
-		printf("\ttable->philos[%i].right_fork = %i\n", i,
-			table.philos[i].right_fork->fork_id);
-	}
+	// printf("\t\t\ttable->n_philos = %i\n \
+	// 		table->time_to_die = %i\n \
+	// 		table->time_to_eat = %i\n \
+	// 		table->time_to_sleep = %i\n \
+	// 		table->n_limit_meals = %i\n",
+	// 		table.n_philos,
+	// 		table.time_to_die,
+	// 		table.time_to_eat,
+	// 		table.time_to_sleep,
+	// 		table.n_limit_meals);
+	// int i;
+	// i = -1;
+	// while (++i < table.n_philos)
+	// {
+	// 	printf("table->philos[%i].id = %i\n", i, table.philos[i].id);
+	// 	printf("\ttable->philos[%i].left_fork = %i\n", i,
+	// 		table.philos[i].left_fork->fork_id);
+	// 	printf("\ttable->philos[%i].right_fork = %i\n", i,
+	// 		table.philos[i].right_fork->fork_id);
+	// }
 	thread_create(&table);
 	return (0);
 }

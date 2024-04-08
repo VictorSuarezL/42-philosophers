@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 10:01:27 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/04/08 10:07:32 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/04/08 16:42:06 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void print_action(t_philo *philo, char *str)
 void increase(t_mtx *mtx, int *value)
 {
 	safe_lock_handle(mtx, LOCK);
+	printf("here!\n");
 	(*value)++;
 	safe_lock_handle(mtx, UNLOCK);
 }

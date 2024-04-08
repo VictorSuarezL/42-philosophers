@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 09:16:11 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/04/08 09:49:09 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/04/08 16:06:37 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ int	parse_input(t_table *table, char **av)
 	table->n_thd_running = 0;
 	table->aux_counter = 0;
 	table->n_philos = ft_atoi(av[1]);
+	// table->n_philos = 3;
     if (table->n_philos > 200)
         return(1);
 	table->time_to_die = ft_atoi(av[2]);

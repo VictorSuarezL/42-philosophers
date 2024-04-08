@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 08:47:50 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/04/08 13:36:33 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/04/08 17:23:07 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,19 +68,22 @@ bool all_philo_thd_running(t_mtx *mtx, int *n_thd, int n_philos)
 
 	res = false;
 	safe_lock_handle(mtx, LOCK);
+	// printf("n_philo_in_all_philo_thd_running = %i\n", n_philos);
+	// printf("n_thd_running_in_all_philo_thd_running = %i\n", *n_thd);
 	// printf("n_philo = %i\n", n_philos);
 	// printf("n_philo = %i\n", n_philos);
 	// if (3 == 3)
 	// if (3 == n_philos)
-	if (*n_thd == 3)
+	if (*n_thd == n_philos)
 	{
-		printf("->>>>>>>changed!\n");
+		// printf("->>>>>>>changed!\n");
 		res = true;
 	}
 	safe_lock_handle(mtx, UNLOCK);
 	return(res);
 }
 
+// void monitor(t_table	*table)
 void	*monitor(void *pointer)
 {
 	t_table	*table;
@@ -88,37 +91,45 @@ void	*monitor(void *pointer)
 
 	table = (t_table *)pointer;
 
-	printf("n_philo_in_monitor = %i\n", table->n_philos);
+	// safe_lock_handle(&table->table_lock, LOCK);
+	// printf("n_philo_in_monitor = %i\n", table->n_philos);
+	// printf("n_thd_running_in_monitor = %i\n", table->n_thd_running);
+	// safe_lock_handle(&table->table_lock, UNLOCK);
+
 	i = -1;
 	while (!all_philo_thd_running(&table->table_lock, &table->n_thd_running, table->n_philos))
 	{
-		printf("i = %i\n", i);
-		i++;
+		// i++;
 		printf("->waiting!\n");
 		ft_usleep(2000);
 	}
+	// if (all_philo_thd_running(&table->table_lock, &table->n_thd_running, table->n_philos))
+	// {
+	// 	printf("all threads ready!\n");
+	// }
+
 
 	while (!simulation_finished(table))
 	{
 		i = -1;
-		// while (++i<table->n_philos && !simulation_finished(table))
-		// {
-		//     // print_action(&table->philos[i], "simul not finished");
-		//     // ft_usleep(2000);
-		//     // if (check_all_ate(table) == 1)
-		//     // {
-		//     //     set_bool(&table->table_lock, &table->end_simulation, true);
-		//     //     print_action(&table->philos[i], "ALL ATE!");
-		//     // }
-		// }
+		while (++i<table->n_philos && !simulation_finished(table))
+		{
+		    print_action(&table->philos[i], "simul not finished");
+		    ft_usleep(2000);
+		    if (check_all_ate(table) == 1)
+		    {
+		        set_bool(&table->table_lock, &table->end_simulation, true);
+		        print_action(&table->philos[i], "ALL ATE!");
+		    }
+		}
 		// while (++i < table->n_philos)
 		// {
-		// 	printf("hello!\n");
-		// 	// print_action(&table->philos[i], "simul not finished");
+		// 	// printf("hello!\n");
+		// 	print_action(&table->philos[i], "simul not finished");
 		// 	ft_usleep(2000);
 		// }
-		printf("simulation not finished!\n");
-		ft_usleep(2000);
+		// printf("simulation not finished!\n");
+		// ft_usleep(2000);
 	}
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 09:15:39 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/04/08 12:48:17 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/04/08 16:06:02 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ void safe_lock_handle(t_mtx *mutex, t_code code);
 
 // MONITOR:
 void *monitor(void *pointer);
+// void monitor(t_table	*table);
+
 
 // SET AND GET:
 void set_bool(t_mtx *mtx, bool *dest, bool value);
 bool get_bool(t_mtx *mtx, bool *value);
-
-
 
 // UTILS:
 int	ft_isdigit(int i);
