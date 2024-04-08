@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 09:16:05 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/04/01 13:52:28 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/04/08 13:40:37 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ void	eat(t_philo *philo)
 		print_action(philo, "has taken a fork left");
 		// printf("%i has taken left fork id = %i\n", philo->id-1, philo->left_fork->fork_id);
 	}
-	
-	
+
+
 	safe_lock_handle(&philo->philo_lock, LOCK);
 	// philo->table->aux_counter++;
 	// printf("%i is eating\n", philo->id-1);
@@ -80,6 +80,7 @@ void	*philo_routine(void *pointer)
 	t_philo	*philo;
 
 	philo = (t_philo *)pointer;
+
 	// if (philo->id % 2 == 0)
 	// {
 	// 	// ft_putendl_fd("sleeping!", 1);
@@ -87,6 +88,8 @@ void	*philo_routine(void *pointer)
 	// 	usleep(100);
 	// }
 	// while (!dead_loop(philo))
+	// increase(&philo->table->table_lock, &philo->table->n_thd_running);
+	// printf("value = %i\n", philo->table->n_thd_running);
 	while (1)
 	{
 		// print_action(philo, "is eating");
@@ -102,7 +105,7 @@ void	*philo_routine(void *pointer)
 int	thread_create(t_table *table)
 {
 	int	i;
-	pthread_t observer;
+	// pthread_t observer;
 
 	i = -1;
 	table->start_simulation = get_current_time();
@@ -112,17 +115,27 @@ int	thread_create(t_table *table)
 	{
 		while (++i < table->n_philos)
 		{
-			if (pthread_create(&table->philos[i].thread_id, NULL, &philo_routine,
-					&table->philos[i]) != 0)
+			// safe_lock_handle(&table->table_lock, LOCK);
+			if (pthread_create(&table->philos[i].thread_id, NULL, &philo_routine, &table->philos[i]) != 0)
 			{
 				ft_error("maybe leaks here!");
 			}
+			// safe_lock_handle(&table->table_lock, UNLOCK);
+			// table->n_thd_running++;
+			// printf("here!\n");
+			increase(&table->table_lock, &table->n_thd_running);
 		}
 	}
-	if(pthread_create(&observer, NULL, &monitor, &table) != 0)
+	// safe_lock_handle(&table->table_lock, LOCK);
+	// printf("->waiting!\n");
+
+	// safe_lock_handle(&table->table_lock, LOCK);
+	if(pthread_create(&table->observer, NULL, &monitor, table) != 0)
 	{
 		ft_error("maybe leaks here! destoy");
 	}
+	// safe_lock_handle(&table->table_lock, UNLOCK);
+
 	// set_bool(&table->table_lock, &table-);
 
 	i = -1;
@@ -168,26 +181,26 @@ int	main(int ac, char **av)
 		return (1);
 	}
 	assign_fork(&table);
-	// printf("\t\t\ttable->n_philos = %i\n \
-	// 		table->time_to_die = %i\n \
-	// 		table->time_to_eat = %i\n \
-	// 		table->time_to_sleep = %i\n \
-	// 		table->n_limit_meals = %i\n",
-	// 		table.n_philos,
-	// 		table.time_to_die,
-	// 		table.time_to_eat,
-	// 		table.time_to_sleep,
-	// 		table.n_limit_meals);
-	// int i;
-	// i = -1;
-	// while (++i < table.n_philos)
-	// {
-	// 	printf("table->philos[%i].id = %i\n", i, table.philos[i].id);
-	// 	printf("\ttable->philos[%i].left_fork = %i\n", i,
-	// 		table.philos[i].left_fork->fork_id);
-	// 	printf("\ttable->philos[%i].right_fork = %i\n", i,
-	// 		table.philos[i].right_fork->fork_id);
-	// }
+	printf("\t\t\ttable->n_philos = %i\n \
+			table->time_to_die = %i\n \
+			table->time_to_eat = %i\n \
+			table->time_to_sleep = %i\n \
+			table->n_limit_meals = %i\n",
+			table.n_philos,
+			table.time_to_die,
+			table.time_to_eat,
+			table.time_to_sleep,
+			table.n_limit_meals);
+	int i;
+	i = -1;
+	while (++i < table.n_philos)
+	{
+		printf("table->philos[%i].id = %i\n", i, table.philos[i].id);
+		printf("\ttable->philos[%i].left_fork = %i\n", i,
+			table.philos[i].left_fork->fork_id);
+		printf("\ttable->philos[%i].right_fork = %i\n", i,
+			table.philos[i].right_fork->fork_id);
+	}
 	thread_create(&table);
 	return (0);
 }

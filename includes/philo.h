@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 09:15:39 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/04/01 13:41:20 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/04/08 12:48:17 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ int	ft_isdigit(int i);
 int	ft_usleep(size_t milliseconds);
 size_t	get_current_time(void);
 void print_action(t_philo *philo, char *str);
+void increase(t_mtx *mtx, int *value);
+
 
 // PARSE_INPUT:
 int check_args(int ac, char **av);
@@ -106,6 +108,7 @@ typedef struct s_table
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				n_limit_meals;
+	pthread_t		observer;
 	// RUN VARIABLES:
 	// int					dead_flag;
 	t_fork				*forks;
@@ -114,7 +117,9 @@ typedef struct s_table
 	t_mtx				table_lock;
 	t_mtx				write_lock;
 	long				start_simulation;
+	bool 				all_threads_ready;
 	bool				end_simulation;
+	int					n_thd_running;
 }						t_table;
 
 #endif

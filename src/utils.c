@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_libft.c                                      :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 10:01:27 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/04/01 10:24:23 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/04/08 10:07:32 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,11 @@ void print_action(t_philo *philo, char *str)
 	// printf("[%ld]\n", time);
 	printf("[%ld] %i %s\n", time, philo->id, str);
 	safe_lock_handle(&philo->table->write_lock, UNLOCK);
+}
+
+void increase(t_mtx *mtx, int *value)
+{
+	safe_lock_handle(mtx, LOCK);
+	(*value)++;
+	safe_lock_handle(mtx, UNLOCK);
 }
