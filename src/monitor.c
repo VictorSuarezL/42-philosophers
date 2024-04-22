@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 08:47:50 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/04/08 17:23:07 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/04/22 16:01:23 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,15 +68,9 @@ bool all_philo_thd_running(t_mtx *mtx, int *n_thd, int n_philos)
 
 	res = false;
 	safe_lock_handle(mtx, LOCK);
-	// printf("n_philo_in_all_philo_thd_running = %i\n", n_philos);
-	// printf("n_thd_running_in_all_philo_thd_running = %i\n", *n_thd);
-	// printf("n_philo = %i\n", n_philos);
-	// printf("n_philo = %i\n", n_philos);
-	// if (3 == 3)
-	// if (3 == n_philos)
+
 	if (*n_thd == n_philos)
 	{
-		// printf("->>>>>>>changed!\n");
 		res = true;
 	}
 	safe_lock_handle(mtx, UNLOCK);
@@ -103,11 +97,10 @@ void	*monitor(void *pointer)
 		printf("->waiting!\n");
 		ft_usleep(2000);
 	}
-	// if (all_philo_thd_running(&table->table_lock, &table->n_thd_running, table->n_philos))
-	// {
-	// 	printf("all threads ready!\n");
-	// }
-
+	if (all_philo_thd_running(&table->table_lock, &table->n_thd_running, table->n_philos))
+	{
+		printf("all threads ready!\n");
+	}
 
 	while (!simulation_finished(table))
 	{
@@ -115,11 +108,12 @@ void	*monitor(void *pointer)
 		while (++i<table->n_philos && !simulation_finished(table))
 		{
 		    print_action(&table->philos[i], "simul not finished");
-		    ft_usleep(2000);
+		    // ft_usleep(2000);
 		    if (check_all_ate(table) == 1)
 		    {
 		        set_bool(&table->table_lock, &table->end_simulation, true);
 		        print_action(&table->philos[i], "ALL ATE!");
+				break;
 		    }
 		}
 		// while (++i < table->n_philos)

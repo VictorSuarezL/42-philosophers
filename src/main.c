@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 09:16:05 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/04/22 09:33:39 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/04/22 13:48:21 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,15 @@ void	eat(t_philo *philo)
 		safe_lock_handle(&philo->left_fork->fork, LOCK);
 		print_action(philo, "has taken a fork left");
 
-		// printf("%i has taken left fork id = %i\n", philo->id-1, philo->left_fork->fork_id);
 		safe_lock_handle(&philo->right_fork->fork, LOCK);
 		print_action(philo, "has taken a fork right");
-		// printf("%i has taken right fork id = %i\n", philo->id-1, philo->right_fork->fork_id);
 	}
 	else
 	{
 		safe_lock_handle(&philo->right_fork->fork, LOCK);
 		print_action(philo, "has taken a fork right");
-		// printf("%i has taken right fork id = %i\n", philo->id-1, philo->right_fork->fork_id);
 		safe_lock_handle(&philo->left_fork->fork, LOCK);
 		print_action(philo, "has taken a fork left");
-		// printf("%i has taken left fork id = %i\n", philo->id-1, philo->left_fork->fork_id);
 	}
 
 
@@ -61,14 +57,14 @@ void think(t_philo *philo)
 	print_action(philo, "is thinking");
 }
 
-// int	dead_loop(t_philo *philo)
-// {
-// 	pthread_mutex_lock(philo->dead_lock);
-// 	if (*philo->dead == 1)
-// 		return (pthread_mutex_unlock(philo->dead_lock), 1);
-// 	pthread_mutex_unlock(philo->dead_lock);
-// 	return (0);
-// }
+/* int	dead_loop(t_philo *philo)
+{
+	pthread_mutex_lock(philo->dead_lock);
+	if (*philo->dead == 1)
+		return (pthread_mutex_unlock(philo->dead_lock), 1);
+	pthread_mutex_unlock(philo->dead_lock);
+	return (0);
+} */
 
 void wait_all_thd_ready(t_table *table)
 {
@@ -85,15 +81,15 @@ void	*philo_routine(void *pointer)
 	philo = (t_philo *)pointer;
 	wait_all_thd_ready(philo->table);
 
-	// if (philo->id % 2 == 0)
-	// {
-	// 	// ft_putendl_fd("sleeping!", 1);
-	// 	// printf("sleeping!\n");
-	// 	usleep(100);
-	// }
-	// while (!dead_loop(philo))
-	// increase(&philo->table->table_lock, &philo->table->n_thd_running);
-	// printf("value = %i\n", philo->table->n_thd_running);
+/* 	if (philo->id % 2 == 0)
+	{
+		// ft_putendl_fd("sleeping!", 1);
+		// printf("sleeping!\n");
+		usleep(100);
+	}
+	while (!dead_loop(philo))
+	increase(&philo->table->table_lock, &philo->table->n_thd_running);
+	printf("value = %i\n", philo->table->n_thd_running); */
 	while (1)
 	{
 		// print_action(philo, "is eating");
@@ -109,7 +105,7 @@ void	*philo_routine(void *pointer)
 int	 thread_create(t_table *table)
 {
 	int	i;
-	// pthread_t observer;
+	pthread_t observer;
 
 	i = -1;
 	table->start_simulation = get_current_time();
@@ -124,11 +120,11 @@ int	 thread_create(t_table *table)
 			{
 				ft_error("maybe leaks here!");
 			}
-			// monitor(table);
-			// printf("i = %i\n", i);
-			// safe_lock_handle(&table->table_lock, UNLOCK);
-			// table->n_thd_running++;
-			// printf("here!\n");
+/* 			monitor(table);
+			printf("i = %i\n", i);
+			safe_lock_handle(&table->table_lock, UNLOCK);
+			table->n_thd_running++;
+			printf("here!\n"); */
 			increase(&table->table_lock, &table->n_thd_running);
 		}
 	}
@@ -138,7 +134,7 @@ int	 thread_create(t_table *table)
 	// safe_lock_handle(&table->table_lock, LOCK);
 	if(pthread_create(&table->observer, NULL, &monitor, table) != 0)
 	{
-		ft_error("maybe leaks here! destoy");
+		ft_error("maybe leaks here! destroy");
 	}
 	// safe_lock_handle(&table->table_lock, UNLOCK);
 
