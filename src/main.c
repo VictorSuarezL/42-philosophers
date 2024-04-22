@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 09:16:05 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/04/08 17:13:33 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/04/22 09:33:39 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,8 @@ void	nap(t_philo *philo)
 
 void think(t_philo *philo)
 {
-	print_action(philo, "is_thinking");
+	print_action(philo, "is thinking");
 }
-
-// void	think(t_philo *philo)
-// {
-// 	printf("%i is thinking\n", philo->id);
-// }
 
 // int	dead_loop(t_philo *philo)
 // {
@@ -111,7 +106,7 @@ void	*philo_routine(void *pointer)
 	return (pointer);
 }
 
-int	thread_create(t_table *table)
+int	 thread_create(t_table *table)
 {
 	int	i;
 	// pthread_t observer;
