@@ -29,19 +29,14 @@ void	eat(t_philo *philo)
 		safe_lock_handle(&philo->left_fork->fork, LOCK);
 		print_action(philo, "has taken a fork left");
 	}
-
-
-	safe_lock_handle(&philo->philo_lock, LOCK);
-	// philo->table->aux_counter++;
-	// printf("%i is eating\n", philo->id-1);
-	print_action(philo, "is eating");
-	// printf("-->aux_counter = %i\n", philo->table->aux_counter);
-	// philo->eating = 1;
-	ft_usleep(philo->table->time_to_eat);
-	// usleep(philo->table->time_to_eat);
+	set_long(&philo->philo_lock, &philo->last_meal_time, get_current_time());
 	philo->meals_counter++;
-	safe_lock_handle(&philo->philo_lock, UNLOCK);
-	// philo->eating = 0;
+	print_action(philo, "is eating");
+	ft_usleep(philo->table->time_to_eat);
+	if (philo->table->n_limit_meals>0 && philo->meals_counter == philo->table->n_limit_meals)
+	{
+		set_bool(&philo->philo_lock, &philo->full, true);
+	}
 	safe_lock_handle(&philo->left_fork->fork, UNLOCK);
 	safe_lock_handle(&philo->right_fork->fork, UNLOCK);
 }
@@ -57,14 +52,14 @@ void think(t_philo *philo)
 	print_action(philo, "is thinking");
 }
 
-/* int	dead_loop(t_philo *philo)
-{
-	pthread_mutex_lock(philo->dead_lock);
-	if (*philo->dead == 1)
-		return (pthread_mutex_unlock(philo->dead_lock), 1);
-	pthread_mutex_unlock(philo->dead_lock);
-	return (0);
-} */
+// int	dead_loop(t_philo *philo)
+// {
+// 	pthread_mutex_lock(philo->dead_lock);
+// 	if (*philo->dead == 1)
+// 		return (pthread_mutex_unlock(philo->dead_lock), 1);
+// 	pthread_mutex_unlock(philo->dead_lock);
+// 	return (0);
+// }
 
 void wait_all_thd_ready(t_table *table)
 {
@@ -90,14 +85,15 @@ void	*philo_routine(void *pointer)
 	while (!dead_loop(philo))
 	increase(&philo->table->table_lock, &philo->table->n_thd_running);
 	printf("value = %i\n", philo->table->n_thd_running); */
-	while (1)
+	while (!simulation_finished(philo->table))
 	{
-		// print_action(philo, "is eating");
-
+		if (get_bool(&philo->philo_lock, &philo->full))
+		{
+			break;
+		}
 		eat(philo);
 		nap(philo);
 		think(philo);
-		// ft_usleep(2000);
 	}
 	return (pointer);
 }
@@ -109,35 +105,25 @@ int	 thread_create(t_table *table)
 
 	i = -1;
 	table->start_simulation = get_current_time();
+
+	if(pthread_create(&table->observer, NULL, &monitor, table) != 0)
+	{
+		ft_error("maybe leaks here! destroy");
+	}
+
 	if (table->n_limit_meals == 0)
 		return 1;
 	else
 	{
 		while (++i < table->n_philos)
 		{
-			// safe_lock_handle(&table->table_lock, LOCK);
 			if (pthread_create(&table->philos[i].thread_id, NULL, &philo_routine, &table->philos[i]) != 0)
 			{
 				ft_error("maybe leaks here!");
 			}
-/* 			monitor(table);
-			printf("i = %i\n", i);
-			safe_lock_handle(&table->table_lock, UNLOCK);
-			table->n_thd_running++;
-			printf("here!\n"); */
 			increase(&table->table_lock, &table->n_thd_running);
 		}
 	}
-	// safe_lock_handle(&table->table_lock, LOCK);
-	// printf("->waiting!\n");
-
-	// safe_lock_handle(&table->table_lock, LOCK);
-	if(pthread_create(&table->observer, NULL, &monitor, table) != 0)
-	{
-		ft_error("maybe leaks here! destroy");
-	}
-	// safe_lock_handle(&table->table_lock, UNLOCK);
-
 	set_bool(&table->table_lock, &table->all_threads_ready, true);
 
 	i = -1;

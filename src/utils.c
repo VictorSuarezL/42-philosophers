@@ -43,12 +43,9 @@ int	ft_usleep(size_t milliseconds)
 void print_action(t_philo *philo, char *str)
 {
 	size_t time;
-	// printf("start_simulation = %ld\n", philo->table->start_simulation);
-	// printf("current = %ld\n", get_current_time());
+
 	safe_lock_handle(&philo->table->write_lock, LOCK);
 	time = get_current_time() - philo->table->start_simulation;
-	// printf("time = %ld\n", time);
-	// printf("[%ld]\n", time);
 	printf("[%ld] %i %s\n", time, philo->id, str);
 	safe_lock_handle(&philo->table->write_lock, UNLOCK);
 }
@@ -56,7 +53,6 @@ void print_action(t_philo *philo, char *str)
 void increase(t_mtx *mtx, int *value)
 {
 	safe_lock_handle(mtx, LOCK);
-	printf("here!\n");
 	(*value)++;
 	safe_lock_handle(mtx, UNLOCK);
 }

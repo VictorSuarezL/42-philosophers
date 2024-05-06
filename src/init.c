@@ -66,6 +66,7 @@ int init_philo(t_table *table)
 		table->philos[i].id = i + 1;
 		table->philos[i].full = false;
 		table->philos[i].meals_counter = 0;
+		table->philos[i].last_meal_time = 0;
         // table->philos[i].dead = &table->dead_flag;
         // table->philos[i].dead_lock = &table->dead_lock;
         // table->philos[i].meal_lock = &table->meal_lock;

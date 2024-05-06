@@ -12,6 +12,8 @@
 
 #include <philo.h>
 
+
+
 int	check_all_ate(t_table *table)
 {
 	int	i;
@@ -57,6 +59,37 @@ void	set_bool(t_mtx *mtx, bool *dest, bool value)
 	safe_lock_handle(mtx, UNLOCK);
 }
 
+void	set_long(t_mtx *mutex, size_t *dest, size_t value)
+{
+	safe_lock_handle(mutex, LOCK);
+	*dest = value;
+	safe_lock_handle(mutex, UNLOCK);
+}
+
+size_t	get_long(t_mtx *mutex, size_t *value)
+{
+	size_t	ret;
+
+	safe_lock_handle(mutex, LOCK);
+	ret = *value;
+	safe_lock_handle(mutex, UNLOCK);
+	return (ret);
+}
+
+static bool philo_died(t_philo *philo)
+{
+	size_t elapsed;
+
+	if (get_bool(&philo->philo_lock, &philo->full))
+		return (false);
+	elapsed = get_current_time() - get_long(&philo->philo_lock, &philo->last_meal_time);
+	if (elapsed > philo->table->time_to_die && philo->last_meal_time > 0)
+	{
+		return true;
+	}
+	return false;
+}
+
 bool	simulation_finished(t_table *table)
 {
 	return (get_bool(&table->table_lock, &table->end_simulation));
@@ -77,29 +110,16 @@ bool all_philo_thd_running(t_mtx *mtx, int *n_thd, int n_philos)
 	return(res);
 }
 
-// void monitor(t_table	*table)
 void	*monitor(void *pointer)
 {
 	t_table	*table;
 	int		i;
-
 	table = (t_table *)pointer;
-
-	// safe_lock_handle(&table->table_lock, LOCK);
-	// printf("n_philo_in_monitor = %i\n", table->n_philos);
-	// printf("n_thd_running_in_monitor = %i\n", table->n_thd_running);
-	// safe_lock_handle(&table->table_lock, UNLOCK);
-
 	i = -1;
+
 	while (!all_philo_thd_running(&table->table_lock, &table->n_thd_running, table->n_philos))
 	{
-		// i++;
-		printf("->waiting!\n");
-		ft_usleep(2000);
-	}
-	if (all_philo_thd_running(&table->table_lock, &table->n_thd_running, table->n_philos))
-	{
-		printf("all threads ready!\n");
+		;
 	}
 
 	while (!simulation_finished(table))
@@ -107,8 +127,12 @@ void	*monitor(void *pointer)
 		i = -1;
 		while (++i<table->n_philos && !simulation_finished(table))
 		{
-		    print_action(&table->philos[i], "simul not finished");
-		    // ft_usleep(2000);
+			if (philo_died(table->philos+i))
+			{
+				set_bool(&table->table_lock, &table->end_simulation, true);
+				print_action(table->philos+i, "DEAD");
+			}
+			
 		    if (check_all_ate(table) == 1)
 		    {
 		        set_bool(&table->table_lock, &table->end_simulation, true);
@@ -116,14 +140,6 @@ void	*monitor(void *pointer)
 				break;
 		    }
 		}
-		// while (++i < table->n_philos)
-		// {
-		// 	// printf("hello!\n");
-		// 	print_action(&table->philos[i], "simul not finished");
-		// 	ft_usleep(2000);
-		// }
-		// printf("simulation not finished!\n");
-		// ft_usleep(2000);
 	}
 	return (NULL);
 }
