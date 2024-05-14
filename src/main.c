@@ -12,66 +12,59 @@
 
 #include <philo.h>
 
+void	taking_forks(t_philo *philo)
+{
+	if (philo->id % 2 == 0)
+	{
+		safe_lock_handle(&philo->left_fork->fork, LOCK);
+		print_action(philo, "has taken a fork left");
+		safe_lock_handle(&philo->right_fork->fork, LOCK);
+		print_action(philo, "has taken a fork right");
+	}
+	else
+	{
+		safe_lock_handle(&philo->right_fork->fork, LOCK);
+		print_action(philo, "has taken a fork right");
+		if (philo->table->n_philos == 1)
+		{
+			ft_usleep(philo->table->time_to_die);
+			safe_lock_handle(&philo->right_fork->fork, UNLOCK);
+			return ;
+		}
+		safe_lock_handle(&philo->left_fork->fork, LOCK);
+		print_action(philo, "has taken a fork left");
+	}
+}
+
 void	eat(t_philo *philo)
 {
 	if (!simulation_finished(philo->table))
 	{
-		if (philo->table->n_philos == 1)
-		{
-			safe_lock_handle(&philo->right_fork->fork, LOCK);
-			// if (!simulation_finished(philo->table))
-				print_action(philo, "has taken a fork right");
-			// ft_usleep(philo->table->time_to_die);
-		}
-		else if (philo->id % 2 == 0)
-		{
-			safe_lock_handle(&philo->left_fork->fork, LOCK);
-			// if (!simulation_finished(philo->table))
-				print_action(philo, "has taken a fork left");
-			safe_lock_handle(&philo->right_fork->fork, LOCK);
-			// if (!simulation_finished(philo->table))
-				print_action(philo, "has taken a fork right");
-		}
-		else
-		{
-			safe_lock_handle(&philo->right_fork->fork, LOCK);
-			// if (!simulation_finished(philo->table))
-				print_action(philo, "has taken a fork right");
-			safe_lock_handle(&philo->left_fork->fork, LOCK);
-			// if (!simulation_finished(philo->table))
-				print_action(philo, "has taken a fork left");
-		}
+		taking_forks(philo);
 		set_long(&philo->philo_lock, &philo->last_meal_time,
 			get_current_time());
 		philo->meals_counter++;
-		// if (!simulation_finished(philo->table))
-		// {
-			print_action(philo, "is eating");
-			ft_usleep(philo->table->time_to_eat);
-		// }
+		print_action(philo, "is eating");
+		ft_usleep(philo->table->time_to_eat);
 		if (philo->table->n_limit_meals > 0
 			&& philo->meals_counter == philo->table->n_limit_meals)
-		{
 			set_bool(&philo->philo_lock, &philo->full, true);
-		}
-		if (philo->table->n_philos != 1)
-			safe_lock_handle(&philo->left_fork->fork, UNLOCK);
+		// if (philo->table->n_philos != 1)
+		safe_lock_handle(&philo->left_fork->fork, UNLOCK);
 		safe_lock_handle(&philo->right_fork->fork, UNLOCK);
 	}
 }
 
 void	nap(t_philo *philo)
 {
-	// if (!simulation_finished(philo->table))
-	// {
-		print_action(philo, "is sleeping");
+	print_action(philo, "is sleeping");
+	if (philo->table->n_philos != 1)
 		ft_usleep(philo->table->time_to_sleep);
-	// }
 }
 
 void	think(t_philo *philo)
 {
-	// if (!simulation_finished(philo->table))
+	if (philo->table->n_philos != 1)
 		print_action(philo, "is thinking");
 }
 
@@ -92,20 +85,20 @@ void	wait_all_thd_ready(t_table *table)
 	}
 }
 
-void	de_synchronize_philos(t_philo *philo)
-{
-	if (philo->table->n_philos % 2 == 0)
-	{
-		if (philo->id % 2 == 0)
-			ft_usleep(30);
-	}
-	else
-	{
-		if (philo->id % 2)
-			think(philo);
-		ft_usleep(30);
-	}
-}
+// void	de_synchronize_philos(t_philo *philo)
+// {
+// 	if (philo->table->n_philos % 2 == 0)
+// 	{
+// 		if (philo->id % 2 == 0)
+// 			ft_usleep(30);
+// 	}
+// 	else
+// 	{
+// 		if (philo->id % 2)
+// 			think(philo);
+// 		ft_usleep(30);
+// 	}
+// }
 
 void	*philo_routine(void *pointer)
 {
@@ -113,16 +106,6 @@ void	*philo_routine(void *pointer)
 
 	philo = (t_philo *)pointer;
 	wait_all_thd_ready(philo->table);
-	/* 	if (philo->id % 2 == 0)
-		{
-			// ft_putendl_fd("sleeping!", 1);
-			// printf("sleeping!\n");
-			usleep(100);
-		}
-		while (!dead_loop(philo))
-		increase(&philo->table->table_lock, &philo->table->n_thd_running);
-		printf("value = %i\n", philo->table->n_thd_running); */
-	// de_synchronize_philos(philo);
 	while (!simulation_finished(philo->table))
 	{
 		if (get_bool(&philo->philo_lock, &philo->full))
@@ -146,40 +129,33 @@ void	thread_create(t_table *table)
 		return ;
 	if (pthread_create(&table->observer, NULL, &monitor, table) != 0)
 	{
-		ft_error("maybe leaks here! destroy");
+		destroy_all(true, table);
 	}
-	if (1 == 0)
+	while (++i < table->n_philos)
 	{
-		printf("afklj");
-	}
-	else
-	{
-		while (++i < table->n_philos)
+		if (pthread_create(&table->philos[i].thread_id, NULL, &philo_routine,
+				&table->philos[i]) != 0)
 		{
-			if (pthread_create(&table->philos[i].thread_id, NULL,
-					&philo_routine, &table->philos[i]) != 0)
-			{
-				ft_error("maybe leaks here!");
-			}
-			increase(&table->table_lock, &table->n_thd_running);
+			destroy_all(true, table);
 		}
+		increase(&table->table_lock, &table->n_thd_running);
 	}
 	table->start_simulation = get_current_time();
 	set_bool(&table->table_lock, &table->all_threads_ready, true);
 	i = -1;
+	if (pthread_join(table->observer, NULL) != 0)
+	{
+		destroy_all(true, table);
+	}
 	while (++i < table->n_philos)
 	{
 		if (pthread_join(table->philos[i].thread_id, NULL) != 0)
 		{
-			ft_error("maybe leaks here!");
+			destroy_all(true, table);
 		}
 		i++;
 	}
 	set_bool(&table->table_lock, &table->end_simulation, true);
-	if (pthread_join(table->observer, NULL) != 0)
-	{
-		ft_error("maybe leaks here!");
-	}
 }
 
 /*
@@ -211,5 +187,6 @@ int	main(int ac, char **av)
 	}
 	assign_fork(&table);
 	thread_create(&table);
+	destroy_all(false, &table);
 	return (0);
 }

@@ -12,8 +12,8 @@
 
 NAME = philo
 # CFLAGS = -Wextra -Wall -Werror -g -MMD
-# CC = gcc $(CFLAGS) $(INCLUDE) -fsanitize=address
-CC = gcc $(CFLAGS) $(INCLUDE)
+CC = gcc $(CFLAGS) $(INCLUDE) -fsanitize=address
+# CC = gcc $(CFLAGS) $(INCLUDE)
 INCLUDE	= -I ./includes
 SRC_DIR = src
 OBJ_DIR = obj

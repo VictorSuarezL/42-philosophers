@@ -87,6 +87,12 @@ static bool philo_died(t_philo *philo)
 	{
 		return true;
 	}
+	if (philo->table->n_philos==1)
+	{
+		ft_usleep(1);
+		return true;
+	}
+	
 	return false;
 }
 
@@ -109,16 +115,6 @@ bool all_philo_thd_running(t_mtx *mtx, int *n_thd, int n_philos)
 	safe_lock_handle(mtx, UNLOCK);
 	return(res);
 }
-
-// void print_action_dead(t_philo *philo, char *str)
-// {
-// 	size_t time;
-
-// 	safe_lock_handle(&philo->table->write_lock, LOCK);
-// 	time = get_current_time() - philo->table->start_simulation;
-// 	printf("[%ld] %i %s\n", time, philo->id, str);
-// 	// safe_lock_handle(&philo->table->write_lock, UNLOCK);
-// }
 
 void	*monitor(void *pointer)
 {

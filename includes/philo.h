@@ -36,6 +36,7 @@ void	ft_error(char *msg);
 
 // SAFE FUNCTIONS:
 void safe_lock_handle(t_mtx *mutex, t_code code);
+void destroy_all(bool end, t_table *table);
 
 // MONITOR:
 void *monitor(void *pointer);
