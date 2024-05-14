@@ -35,13 +35,9 @@ int	init_table(t_table *table)
 	}
 	safe_lock_handle(&table->table_lock, INIT);
 	safe_lock_handle(&table->write_lock, INIT);
-	// pthread_mutex_init(&table->table_lock, PTHREAD_MUTEX_NORMAL);
-	// pthread_mutex_init(&table->write_lock, PTHREAD_MUTEX_NORMAL);
 	while (++i < table->n_philos)
 	{
 		safe_lock_handle(&table->forks[i].fork, INIT);
-
-		// pthread_mutex_init(&table->forks[i].fork, PTHREAD_MUTEX_NORMAL);
 		table->forks[i].fork_id = i;
 	}
 	return (0);
@@ -56,7 +52,7 @@ int	init_table(t_table *table)
 int	init_philo(t_table *table)
 {
 	int	i;
-	
+
 	i = -1;
 	while (++i < table->n_philos)
 	{
@@ -64,13 +60,7 @@ int	init_philo(t_table *table)
 		table->philos[i].full = false;
 		table->philos[i].meals_counter = 0;
 		table->philos[i].last_meal_time = 0;
-		// table->philos[i].dead = &table->dead_flag;
-		// table->philos[i].dead_lock = &table->dead_lock;
-		// table->philos[i].meal_lock = &table->meal_lock;
-		// table->philos[i].write_lock = &table->write_lock;
 		safe_lock_handle(&table->philos[i].philo_lock, INIT);
-		
-		// pthread_mutex_init(&table->philos[i].philo_lock, PTHREAD_MUTEX_NORMAL);
 		table->philos[i].table = table;
 	}
 	return (0);

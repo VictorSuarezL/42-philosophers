@@ -59,5 +59,3 @@ void	increase(t_mtx *mtx, int *value)
 	(*value)++;
 	safe_lock_handle(mtx, UNLOCK);
 }
-
-// void destroy_all(char *str, t_table *table, )

@@ -11,9 +11,8 @@
 # **************************************************************************** #
 
 NAME = philo
-# CFLAGS = -Wextra -Wall -Werror -g -MMD
+CFLAGS = -Wextra -Wall -Werror -g -MMD
 CC = gcc $(CFLAGS) $(INCLUDE) -fsanitize=address
-# CC = gcc $(CFLAGS) $(INCLUDE)
 INCLUDE	= -I ./includes
 SRC_DIR = src
 OBJ_DIR = obj
@@ -25,6 +24,8 @@ SRC_FILES = $(SRC_DIR)/main.c \
 			$(SRC_DIR)/parse_input.c \
 			$(SRC_DIR)/safe_functions.c \
 			$(SRC_DIR)/monitor.c \
+			$(SRC_DIR)/routine.c \
+			$(SRC_DIR)/setters_getters.c \
 			$(SRC_DIR)/utils.c
 
 
