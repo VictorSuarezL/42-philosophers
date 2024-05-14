@@ -40,17 +40,20 @@ int	ft_usleep(size_t milliseconds)
 	return (0);
 }
 
-void print_action(t_philo *philo, char *str)
+void	print_action(t_philo *philo, char *str)
 {
-	size_t time;
+	size_t	time;
 
-	safe_lock_handle(&philo->table->write_lock, LOCK);
-	time = get_current_time() - philo->table->start_simulation;
-	printf("[%ld] %i %s\n", time, philo->id, str);
-	safe_lock_handle(&philo->table->write_lock, UNLOCK);
+	if (!simulation_finished(philo->table))
+	{
+		safe_lock_handle(&philo->table->write_lock, LOCK);
+		time = get_current_time() - philo->table->start_simulation;
+		printf("[%ld] %i %s\n", time, philo->id, str);
+		safe_lock_handle(&philo->table->write_lock, UNLOCK);
+	}
 }
 
-void increase(t_mtx *mtx, int *value)
+void	increase(t_mtx *mtx, int *value)
 {
 	safe_lock_handle(mtx, LOCK);
 	(*value)++;

@@ -110,6 +110,16 @@ bool all_philo_thd_running(t_mtx *mtx, int *n_thd, int n_philos)
 	return(res);
 }
 
+// void print_action_dead(t_philo *philo, char *str)
+// {
+// 	size_t time;
+
+// 	safe_lock_handle(&philo->table->write_lock, LOCK);
+// 	time = get_current_time() - philo->table->start_simulation;
+// 	printf("[%ld] %i %s\n", time, philo->id, str);
+// 	// safe_lock_handle(&philo->table->write_lock, UNLOCK);
+// }
+
 void	*monitor(void *pointer)
 {
 	t_table	*table;
@@ -129,8 +139,10 @@ void	*monitor(void *pointer)
 		{
 			if (philo_died(table->philos+i))
 			{
-				set_bool(&table->table_lock, &table->end_simulation, true);
 				print_action(table->philos+i, "DEAD");
+				set_bool(&table->table_lock, &table->end_simulation, true);
+				// safe_lock_handle(&table->write_lock, LOCK);
+
 			}
 			
 		    if (check_all_ate(table) == 1)
