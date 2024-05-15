@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:31:39 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/05/15 11:42:45 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/05/15 11:48:48 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ void	eat(t_philo *philo)
 		taking_forks(philo);
 		set_long(&philo->philo_lock, &philo->last_meal_time,
 			get_current_time());
-		philo->meals_counter++;
 		print_action(philo, "is eating");
+		philo->meals_counter++;
 		ft_usleep(philo->table->time_to_eat);
 		if (philo->table->n_limit_meals > 0
 			&& philo->meals_counter == philo->table->n_limit_meals)
