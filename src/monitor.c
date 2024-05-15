@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 08:47:50 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/04/22 16:01:23 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/05/15 08:58:35 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int	check_all_ate(t_table *table)
 		safe_lock_handle(&table->philos[i].philo_lock, LOCK);
 		if (table->philos[i].meals_counter >= table->n_limit_meals)
 		{
+			// printf("%d", done_eating);
 			done_eating++;
 		}
 		safe_lock_handle(&table->philos[i].philo_lock, UNLOCK);
@@ -99,6 +100,7 @@ void	*monitor(void *pointer)
 		}
 		if (check_all_ate(table) == 1)
 		{
+			print_action(table->philos + i, "ALL ATE!");
 			set_bool(&table->table_lock, &table->end_simulation, true);
 			break ;
 		}
