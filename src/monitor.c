@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 08:47:50 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/05/15 10:49:55 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/05/15 11:28:37 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,20 +91,17 @@ void	*monitor(void *pointer)
 		i = 1;
 	while (!simulation_finished(table))
 	{
-	i = -1;
-	while (++i < table->n_philos && !simulation_finished(table))
-	{
-		if (philo_died(table->philos + i))
+		i = -1;
+		while (++i < table->n_philos && !simulation_finished(table))
 		{
-			print_action(table->philos + i, "DEAD");
-			set_bool(&table->table_lock, &table->end_simulation, true);
+			if (philo_died(table->philos + i))
+			{
+				print_action(table->philos + i, "DEAD");
+				set_bool(&table->table_lock, &table->end_simulation, true);
+			}
+			if (check_all_ate(table) == 1)
+				set_bool(&table->table_lock, &table->end_simulation, true);
 		}
-		if (check_all_ate(table) == 1)
-		{
-			set_bool(&table->table_lock, &table->end_simulation, true);
-			break ;
-		}
-	}
 	}
 	return (NULL);
 }
