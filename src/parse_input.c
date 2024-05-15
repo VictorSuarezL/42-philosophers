@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 09:16:11 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/04/08 16:06:37 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/05/15 11:08:17 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,12 @@ int	parse_input(t_table *table, char **av)
 	table->time_to_eat = ft_atoi(av[3]);
 	table->time_to_sleep = ft_atoi(av[4]);
 	if (av[5])
-		table->n_limit_meals = ft_atoi(av[5]);
-	if (table->n_limit_meals == 0)
 	{
-		return (1);
+		table->n_limit_meals = ft_atoi(av[5]);
+		if (table->n_limit_meals == 0)
+		{
+			return (1);
+		}
 	}
 	else
 		table->n_limit_meals = -1;

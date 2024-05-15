@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 08:47:50 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/05/15 08:58:35 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/05/15 11:42:13 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,19 +90,18 @@ void	*monitor(void *pointer)
 	while (!all_philo_thd_running(&table->table_lock, &table->n_thd_running,
 			table->n_philos))
 		i = 1;
-	i = -1;
-	while (++i < table->n_philos && !simulation_finished(table))
+	while (!simulation_finished(table))
 	{
-		if (philo_died(table->philos + i))
+		i = -1;
+		while (++i < table->n_philos && !simulation_finished(table))
 		{
-			print_action(table->philos + i, "DEAD");
-			set_bool(&table->table_lock, &table->end_simulation, true);
-		}
-		if (check_all_ate(table) == 1)
-		{
-			print_action(table->philos + i, "ALL ATE!");
-			set_bool(&table->table_lock, &table->end_simulation, true);
-			break ;
+			if (philo_died(table->philos + i))
+			{
+				print_action(table->philos + i, "DEAD");
+				set_bool(&table->table_lock, &table->end_simulation, true);
+			}
+			if (check_all_ate(table) == 1)
+				set_bool(&table->table_lock, &table->end_simulation, true);
 		}
 	}
 	return (NULL);
