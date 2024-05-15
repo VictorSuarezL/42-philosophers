@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 08:47:50 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/04/22 16:01:23 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/05/15 10:49:55 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ void	*monitor(void *pointer)
 	while (!all_philo_thd_running(&table->table_lock, &table->n_thd_running,
 			table->n_philos))
 		i = 1;
+	while (!simulation_finished(table))
+	{
 	i = -1;
 	while (++i < table->n_philos && !simulation_finished(table))
 	{
@@ -102,6 +104,7 @@ void	*monitor(void *pointer)
 			set_bool(&table->table_lock, &table->end_simulation, true);
 			break ;
 		}
+	}
 	}
 	return (NULL);
 }
