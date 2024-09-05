@@ -6,7 +6,7 @@
 #    By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/01 09:16:19 by vsanz-su          #+#    #+#              #
-#    Updated: 2024/04/22 12:46:24 by vsanz-su         ###   ########.fr        #
+#    Updated: 2024/05/15 12:14:16 by vsanz-su         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,6 @@ SRC_FILES = $(SRC_DIR)/main.c \
 
 #OBJ/DEP
 OBJ_FILES = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
-# DEP = $(addsuffix .d, $(basename $(SRC_FILES)))
 
 #RULES
 all: $(NAME)

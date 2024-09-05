@@ -6,7 +6,7 @@
 /*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:31:39 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/05/15 11:48:48 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/05/15 11:54:53 by vsanz-su         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@ void	taking_forks(t_philo *philo)
 	if (philo->id % 2 == 0)
 	{
 		safe_lock_handle(&philo->left_fork->fork, LOCK);
-		print_action(philo, "has taken a fork left");
+		print_action(philo, "has taken a fork");
 		safe_lock_handle(&philo->right_fork->fork, LOCK);
-		print_action(philo, "has taken a fork right");
+		print_action(philo, "has taken a fork");
 	}
 	else
 	{
 		safe_lock_handle(&philo->right_fork->fork, LOCK);
-		print_action(philo, "has taken a fork right");
+		print_action(philo, "has taken a fork");
 		if (philo->table->n_philos == 1)
 		{
 			ft_usleep(philo->table->time_to_die);
@@ -32,7 +32,7 @@ void	taking_forks(t_philo *philo)
 			return ;
 		}
 		safe_lock_handle(&philo->left_fork->fork, LOCK);
-		print_action(philo, "has taken a fork left");
+		print_action(philo, "has taken a fork");
 	}
 }
 
